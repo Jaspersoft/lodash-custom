@@ -1,7 +1,7 @@
 /**
  * @license
  * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash underscore plus="cloneDeep"`
+ * Build: `lodash underscore plus="cloneDeep" exports="amd"`
  * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -81,15 +81,6 @@
 
   /** Used as a reference to the global object */
   var root = (objectTypes[typeof window] && window) || this;
-
-  /** Detect free variable `exports` */
-  var freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports;
-
-  /** Detect free variable `module` */
-  var freeModule = objectTypes[typeof module] && module && !module.nodeType && module;
-
-  /** Detect the popular CommonJS extension `module.exports` */
-  var moduleExports = freeModule && freeModule.exports === freeExports && freeExports;
 
   /** Detect free variable `global` from Node.js or Browserified code and use it as `root` */
   var freeGlobal = objectTypes[typeof global] && global;
@@ -5142,18 +5133,13 @@
 
   /*--------------------------------------------------------------------------*/
 
-  if (freeExports && freeModule) {
-    // in Node.js or RingoJS
-    if (moduleExports) {
-      (freeModule.exports = lodash)._ = lodash;
-    }
-    // in Narwhal or Rhino -require
-    else {
-      freeExports._ = lodash;
-    }
+  // some AMD build optimizers like r.js check for condition patterns like the following:
+  if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
+    // define as an anonymous module so, through path mapping, it can be
+    // referenced as the "underscore" module
+    define(function() {
+      return lodash;
+    });
   }
-  else {
-    // in a browser or Rhino
-    root._ = lodash;
-  }
+
 }.call(this));
